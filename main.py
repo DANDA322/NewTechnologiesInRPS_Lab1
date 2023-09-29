@@ -10,8 +10,8 @@ DATASET_DIR = "dataset"
 DATASET_CAT_DIR = "dataset/cat"
 DATASET_DOG_DIR = "dataset/dog"
 YANDEX_IMAGES_URL = "https://yandex.ru/images/search"
-PAGE_COUNT = 4
-WINDOW_SCROLL_COUNT = 15
+PAGE_COUNT = 1
+WINDOW_SCROLL_COUNT = 1
 SCROLL_SLEEP_SECONDS = 3
 IMAGES_SLEEP_SECONDS = 30
 IMAGES_LIMIT = 1000
@@ -25,8 +25,7 @@ if not os.path.exists(DATASET_DOG_DIR):
     os.mkdir(DATASET_DOG_DIR)
 
 
-def download(query, folder, preview):
-
+def parse_images(query, folder, preview):
     items = list()
 
     options = webdriver.FirefoxOptions()
@@ -81,10 +80,11 @@ def downloadImage(img_url, folder, image_number):
         img_data = requests.get(img_url, headers=headers).content
     except Exception as e:  # Обработка ошибки, которая может возникнуть в результате загрузки картинки
         print("Произошла ошибка при загрузке картинки: " + str(img_url))
+        return
     filename = os.path.join(folder, f"{image_number:04d}.jpg")
     with open(filename, "wb") as f:
         f.write(img_data)
 
-
-download("dog", "dataset/dog", True)
-download("cat", "dataset/cat", True)
+if __name__ == "__main__":
+    # parse_images("dog", DATASET_DOG_DIR, True)
+    parse_images("cat", DATASET_CAT_DIR, True)
