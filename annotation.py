@@ -3,8 +3,9 @@ import csv
 
 
 # Функция для создания CSV-файла с аннотациями
-def create_annotation_file(dataset_folder, output_file):
+def Create_annotation_file(dataset_folder, output_file):
     """
+    Создает файл аннотацию
 
     :param dataset_folder: Путь к папке с датасетом
     :param output_file:  Имя и путь для создания CSV-файла

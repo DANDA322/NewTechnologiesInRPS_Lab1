@@ -16,14 +16,6 @@ SCROLL_SLEEP_SECONDS = 3
 IMAGES_SLEEP_SECONDS = 30
 IMAGES_LIMIT = 1000
 
-# Создаем папку "dataset" и подпапки "cat" и "dog"
-if not os.path.exists(DATASET_DIR):
-    os.mkdir(DATASET_DIR)
-if not os.path.exists(DATASET_CAT_DIR):
-    os.mkdir(DATASET_CAT_DIR)
-if not os.path.exists(DATASET_DOG_DIR):
-    os.mkdir(DATASET_DOG_DIR)
-
 
 def parse_images(query, folder, preview):
     items = list()
@@ -86,5 +78,14 @@ def downloadImage(img_url, folder, image_number):
         f.write(img_data)
 
 if __name__ == "__main__":
+
+    # Создаем папку "dataset" и подпапки "cat" и "dog"
+    if not os.path.exists(DATASET_DIR):
+        os.mkdir(DATASET_DIR)
+    if not os.path.exists(DATASET_CAT_DIR):
+        os.mkdir(DATASET_CAT_DIR)
+    if not os.path.exists(DATASET_DOG_DIR):
+        os.mkdir(DATASET_DOG_DIR)
+
     # parse_images("dog", DATASET_DOG_DIR, True)
     parse_images("cat", DATASET_CAT_DIR, True)
