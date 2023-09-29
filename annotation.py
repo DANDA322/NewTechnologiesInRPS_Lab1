@@ -4,6 +4,13 @@ import csv
 
 # Функция для создания CSV-файла с аннотациями
 def create_annotation_file(dataset_folder, output_file):
+    """
+
+    :param dataset_folder: Путь к папке с датасетом
+    :param output_file:  Имя и путь для создания CSV-файла
+    :return: В результате выполнения функции создается CSV-файл с аннотацией
+    """
+
     # Открываем CSV-файл для записи
     with open(output_file, 'w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file)
@@ -17,11 +24,10 @@ def create_annotation_file(dataset_folder, output_file):
                 # Получаем абсолютный путь к файлу
                 absolute_path = os.path.abspath(file)
 
-
                 # Получаем относительный путь относительно вашего Python-проекта
                 relative_path = os.path.join(root, file)
 
-                # Получаем метку класса (в данном примере используется имя папки)
+                # Получаем метку класса (имя папки)
                 class_label = os.path.basename(root)
 
                 # Записываем информацию о файле в CSV-файл
@@ -29,13 +35,13 @@ def create_annotation_file(dataset_folder, output_file):
 
 
 if __name__ == "__main__":
-    # Задайте путь к папке с вашим датасетом
+    # Путь к папке с датасетом
     dataset_folder = 'dataset'
 
-    # Задайте имя и путь для создания CSV-файла
+    # Имя и путь для создания CSV-файла
     output_file = 'dataset_annotations.csv'
 
-    # Вызываем функцию для создания аннотаций
+    # Создаем аннотацию
     create_annotation_file(dataset_folder, output_file)
 
     print(f"CSV-файл с аннотациями создан: {output_file}")
