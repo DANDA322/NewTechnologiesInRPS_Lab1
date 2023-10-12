@@ -1,10 +1,17 @@
 import pandas as pd
+import os
 
 CSV_FILE_NAME = "dataset_copy_random/dataset_copy_random_annotations.csv"
 CLASS_LABEL = 'cat'
 
 
 def get_next_instance(class_label, start_index=0):
+    """
+
+    :param class_label: Метка класса
+    :param start_index: Индекс картинки
+    :return: Файл
+    """
     # Чтение данных из файла
     df = pd.read_csv(CSV_FILE_NAME, encoding='cp1251')
 
@@ -19,9 +26,9 @@ def get_next_instance(class_label, start_index=0):
     if start_index >= len(class_df):
         return None
 
-    # Получаем следующий экземпляр и возвращаем путь
+    # Получаем следующий экземпляр и возвращаем файл
     next_instance = class_df.iloc[start_index]
-    return next_instance['absolute_path']
+    return open(next_instance['absolute_path'])
 
 
 if __name__ == "__main__":
@@ -33,5 +40,6 @@ if __name__ == "__main__":
 
         if next_instance is not None:
             print(f'Следующий экземпляр класса "{CLASS_LABEL}" по пути: {next_instance}')
+            next_instance.close()
         else:
             print(f'Экземпляры класса "{CLASS_LABEL}" закончились.')
