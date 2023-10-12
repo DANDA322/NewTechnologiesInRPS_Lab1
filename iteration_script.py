@@ -1,5 +1,4 @@
 import pandas as pd
-import os
 
 CSV_FILE_NAME = "dataset_copy_random/dataset_copy_random_annotations.csv"
 CLASS_LABEL = 'cat'
