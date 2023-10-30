@@ -3,7 +3,7 @@ import csv
 
 
 # Функция для создания CSV-файла с аннотациями
-def Create_annotation_file(dataset_folder, output_file):
+def create_annotation_file(dataset_folder, output_file):
     """
     Создает файл аннотацию
 
@@ -19,14 +19,15 @@ def Create_annotation_file(dataset_folder, output_file):
         # Записываем заголовки столбцов
         csv_writer.writerow(['absolute_path', 'relative_path', 'class_label'])
 
+        absolute_dataset_folder = os.path.abspath(dataset_folder)
         # Проходим по всем файлам в датасете
-        for root, _, files in os.walk(dataset_folder):
+        for root, _, files in os.walk(absolute_dataset_folder):
             for file in files:
                 # Получаем абсолютный путь к файлу
-                absolute_path = os.path.abspath(file)
+                absolute_path = os.path.join(root, file)
 
                 # Получаем относительный путь относительно вашего Python-проекта
-                relative_path = os.path.join(root, file)
+                relative_path = os.path.join(dataset_folder, file)
 
                 # Получаем метку класса (имя папки)
                 class_label = os.path.basename(root)

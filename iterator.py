@@ -21,7 +21,8 @@ class InstancesIterator:
         instance = self.class_df.iloc[self.current_instance_index]
         self.current_instance_index += 1
 
-        return open(instance['absolute_path'])
+        # return open(instance['absolute_path'])
+        return instance['absolute_path']
 
 
 if __name__ == "__main__":
