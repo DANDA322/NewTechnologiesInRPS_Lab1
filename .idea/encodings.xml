@@ -2,6 +2,9 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/2345.csv" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/New/dataset_0000.csv" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/New/dataset_copy_annotations.csv" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/NewRandom/dataset_copy_random_annotations.csv" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/annotation.csv" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/dataset/12345.csv" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/dataset/annotation.csv" charset="windows-1251" />
