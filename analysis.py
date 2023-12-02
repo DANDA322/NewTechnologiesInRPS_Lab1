@@ -7,6 +7,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
+def get_df(csv_file_path):
+    df = pd.read_csv(csv_file_path, encoding='cp1251')
+    return df[['class_label', 'absolute_path']]
+
+
+def class_mapping_df(df, class_mapping):
+    df['label'] = df['class_label'].map(class_mapping).astype('category')
+    return df
+
+
 def get_image_size(file_path):
     try:
         with Image.open(file_path) as img:
@@ -16,6 +26,29 @@ def get_image_size(file_path):
     except Exception as e:
         print(f"Error reading image at {file_path}: {e}")
         return None, None, None
+
+
+def get_statistics(df):
+    # Статистика для столбцов с размерами изображений
+    image_size_stats = df[['height', 'width', 'channels']].describe()
+    print("Статистика для размеров изображений:")
+    print(image_size_stats)
+
+    # Статистика для столбца с метками классов
+    class_label_stats = df['label'].describe()
+
+    # Табличка с суммой по метке
+    class_label_counts = df['label'].value_counts()
+
+    plt.figure(figsize=(8, 6))
+    class_label_counts.plot(kind='pie', autopct='%1.1f%%', startangle=90)
+    plt.title('Распределение меток классов')
+    plt.show()
+
+    print("Статистика для столбца с метками классов:")
+    print(class_label_stats)
+    print("\nТабличка с суммой по метке:")
+    print(class_label_counts)
 
 
 def filter_dataframe_by_label(dataframe, target_label):
@@ -55,8 +88,8 @@ def count_pixels(file_path):
         print(f"Error counting pixels for image at {file_path}: {e}")
         return None
 
+
 def show_images(image_paths):
-    print(len(image_paths))
     fig, axes = plt.subplots(1, len(image_paths), figsize=(15, 5))
     for i, value in enumerate(image_paths):
         img = cv2.imread(value)
@@ -78,8 +111,6 @@ def plot_histogram(dataframe, target_label):
     # Выбор случайного изображения из заданного класса
     random_image_path = dataframe[dataframe['label'] == target_label].sample(1)['absolute_path'].iloc[0]
 
-    print(random_image_path)
-
     # Загрузка изображения с использованием OpenCV
     img = cv2.imread(random_image_path)
 
@@ -89,68 +120,40 @@ def plot_histogram(dataframe, target_label):
     # Разделение изображения на отдельные каналы
     channels = cv2.split(img_rgb)
 
-    # Строим гистограмму для каждого канала
     hist_channels = []
     for channel in channels:
         hist = cv2.calcHist([channel], [0], None, [256], [0, 256])
         hist_channels.append(hist)
-
-    # Отображение изображения и гистограммы
-    plt.figure(figsize=(12, 4))
-
-    plt.subplot(1, 2, 1)
-    plt.imshow(img_rgb)
-    plt.title('Изображение')
-    plt.axis('off')
-
-    plt.subplot(1, 2, 2)
-    colors = ('r', 'g', 'b')
-    for i, color in enumerate(colors):
-        plt.plot(hist_channels[i], color=color)
-    plt.title('Гистограмма по каналам')
-    plt.xlabel('Значение пикселя')
-    plt.ylabel('Частота')
-
-    plt.show()
 
     return hist_channels
 
 
-def plot_channel_histogram(channels):
-    # Строим гистограмму для каждого канала
-    hist_channels = []
-    for channel in channels:
-        hist = cv2.calcHist([channel], [0], None, [256], [0, 256])
-        hist_channels.append(hist)
-
-    # Отображение гистограммы
+def plot_channel_histogram(hist_channels):
+    # Визуализация гистограмм
     plt.figure(figsize=(12, 6))
 
-    colors = ('r', 'g', 'b')
-    for i, color in enumerate(colors):
-        plt.plot(hist_channels[i], color=color, label=f'Channel {i}')
+    for i, hist in enumerate(hist_channels):
+        plt.subplot(1, 3, i + 1)  # 1 row, 3 columns, i+1-th subplot
+        plt.plot(hist, color=('red', 'green', 'blue')[i])
+        plt.title(f'Channel {i + 1} Histogram')
+        plt.xlabel('Pixel Value')
+        plt.ylabel('Frequency')
 
-    plt.title('Гистограмма цветовых каналов')
-    plt.xlabel('Значение пикселя')
-    plt.ylabel('Частота')
-    plt.legend()
+    plt.tight_layout()
     plt.show()
-
-    return hist_channels
 
 
 def test():
     # 1
     print(1)
     csv_file_path = 'dataset/annotation.csv'
-    df = pd.read_csv(csv_file_path, encoding='cp1251')
-    df = df[['class_label', 'absolute_path']]
+    df = get_df(csv_file_path)
     print(df)
 
     # 3
     print(3)
     class_mapping = {'cat': 0, 'dog': 1}
-    df['label'] = df['class_label'].map(class_mapping).astype('category')
+    df = class_mapping_df(df, class_mapping)
     print(df.head())
 
     # 4
@@ -161,31 +164,13 @@ def test():
     # 5
     # Статистика для столбцов с размерами изображений
     print(5)
-    image_size_stats = df[['height', 'width', 'channels']].describe()
-    print("Статистика для размеров изображений:")
-    print(image_size_stats)
-
-    # Статистика для столбца с метками классов
-    class_label_stats = df['label'].describe()
-
-    # Табличка с суммой по метке
-    class_label_counts = df['label'].value_counts()
-
-    plt.figure(figsize=(8, 6))
-    class_label_counts.plot(kind='pie', autopct='%1.1f%%', startangle=90)
-    plt.title('Распределение меток классов')
-    plt.show()
-
-    print("Статистика для столбца с метками классов:")
-    print(class_label_stats)
-    print("\nТабличка с суммой по метке:")
-    print(class_label_counts)
+    get_statistics(df)
 
     # 6
     print("\n6. Фильтрация по метке")
     target_label = 'cat'
     filtered_df = filter_dataframe_by_label(df, target_label)
-    print(filtered_df)
+    print(filtered_df.head())
 
     # 7
     print("\n7. Фильтрация по метке и размеру")
@@ -203,21 +188,16 @@ def test():
     grouped_df = df.groupby('label')['pixel_count'].agg(['min', 'max', 'mean'])
     print(grouped_df)
 
-
-
-
     # Выберем случайные изображения из каждой группы
     selected_images = []
 
     for i in range(5):
         group_images = df[df['class_label'] == target_label]['absolute_path'].tolist()
-        print(group_images)
         selected_image = random.choice(group_images)
         selected_images.append(selected_image)
 
     # Отобразим выбранные изображения
     show_images(selected_images)
-
 
     # 9
     print("\n9. Строим гистограмму")
