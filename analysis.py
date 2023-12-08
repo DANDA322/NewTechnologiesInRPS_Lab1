@@ -31,7 +31,6 @@ def get_image_size(file_path):
 def get_statistics(df):
     # Статистика для столбцов с размерами изображений
     image_size_stats = df[['height', 'width', 'channels']].describe()
-    print("Статистика для размеров изображений:")
     print(image_size_stats)
 
     # Статистика для столбца с метками классов
@@ -49,6 +48,7 @@ def get_statistics(df):
     print(class_label_stats)
     print("\nТабличка с суммой по метке:")
     print(class_label_counts)
+    return image_size_stats
 
 
 def filter_dataframe_by_label(dataframe, target_label):
